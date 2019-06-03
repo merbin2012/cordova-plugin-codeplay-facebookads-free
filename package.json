@@ -1,0 +1,33 @@
+{
+  "name": "cordova-plugin-codeplay-facebookads-free",
+  "version": "0.0.1",
+  "description": "Free facebook audience network ads for cordova user. This supports banner and Interstitial ads.",
+  "cordova": {
+    "id": "cordova-plugin-codeplay-facebookads-free",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-facebook",
+    "cordova-audience-network",
+    "cordova-free-ads",
+    "cordova-free-audience-network",
+    "facebook-ads",
+    "cordova-facebook-ads",
+    "facebook",
+    "audience-network"
+  ],
+  "author": "Merbin Joe",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/merbin2012/cordova-plugin-codeplay-facebookads-free.git"
+  },
+  "bugs": {
+    "url": "https://github.com/merbin2012/cordova-plugin-codeplay-facebookads-free/issues"
+  },
+  "homepage": "https://github.com/merbin2012/cordova-plugin-codeplay-facebookads-free#readme"
+}
