@@ -33,7 +33,7 @@ public class codeplayfacebookads extends CordovaPlugin {
 
     private ViewGroup parentView;
     static boolean isFirstTime=true;
-
+    static boolean isInterstitialLoad=false;	
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -83,7 +83,7 @@ public class codeplayfacebookads extends CordovaPlugin {
                         ((ViewGroup)adView.getParent()).removeView(adView);
                         adView=null;
                     }
-                    callbackContext.success("Banner Ad hide");
+                    callbackContext.success("Facebook banner Ads hide");
 
                     //PluginResult result = new PluginResult(PluginResult.Status.OK, "");
                     //callbackContext.sendPluginResult(result);
@@ -93,9 +93,8 @@ public class codeplayfacebookads extends CordovaPlugin {
             return true;
 
         }
-
-
-        if (action.equals("showInterstitialAds")) {
+		
+        if (action.equals("loadInterstitialAds")) {
 
             String interstitialid = opts.optString("interstitialid");
             String isTesting = opts.optString("isTesting");
@@ -108,33 +107,29 @@ public class codeplayfacebookads extends CordovaPlugin {
             }
 
 
-            facebookInterstitialAdsShow(callbackContext);
+            facebookInterstitialAdsLoad(callbackContext);
 
-            //String message = args.getString(0);
-            //this.coolMethod(message, callbackContext);
             return true;
         }
 
+        if (action.equals("showInterstitialAds")) {
+			
+			if(isInterstitialLoad)
+			{
+				interstitialAd.show();
+				callbackContext.success("Facebook interstitial Ads Loaded");
+			}
+			else
+				callbackContext.error("First initialize the facebook interstitial ads '	cordova.plugins.codeplayfacebookads.loadInterstitialAds(options,success,fail);'");
+
+            return true;
+        }
         return false;
     }
-
-    private void coolMethod(String message, CallbackContext callbackContext) {
-        if (message != null && message.length() > 0) {
-            callbackContext.success(message);
-        } else {
-            callbackContext.error("Expected one non-empty string argument.");
-        }
-    }
-
-
 
 
     private void facebookBannerAdsShow(CallbackContext callbackContext)
     {
-        //Context testParameter = (cordova.getActivity()).getBaseContext();
-
-
-
         cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -172,28 +167,22 @@ public class codeplayfacebookads extends CordovaPlugin {
         adView.setAdListener(new AdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {
-                // Ad error callback
-                //adError.getErrorMessage(),
-                  //return adError.getErrorMessage();
                 callbackContext.error(adError.getErrorMessage());
             }
 
             @Override
             public void onAdLoaded(Ad ad) {
-                // Ad loaded callback
-                callbackContext.success("Banner Ad Loaded");
+                callbackContext.success("Facebook banner Ads loaded");
             }
 
             @Override
             public void onAdClicked(Ad ad) {
-                // Ad clicked callback
-                callbackContext.success("Banner Ad clicked");
+                callbackContext.success("Facebook banner Ads clicked");
             }
 
             @Override
             public void onLoggingImpression(Ad ad) {
-                // Ad impression logged callback
-                callbackContext.success("Ad impression logged");
+                callbackContext.success("Facebook Ads impression logged");
             }
         });
 
@@ -202,51 +191,40 @@ public class codeplayfacebookads extends CordovaPlugin {
     }
 
 
-    private void facebookInterstitialAdsShow(CallbackContext callbackContext)
+    private void facebookInterstitialAdsLoad(CallbackContext callbackContext)
     {
         interstitialAd.setAdListener(new InterstitialAdListener() {
             @Override
-            public void onInterstitialDisplayed(Ad ad) {
-                // Interstitial ad displayed callback
-                callbackContext.success("Interstitial ad displayed.");
-                //Log.e(TAG, "Interstitial ad displayed.");
+            public void onInterstitialDisplayed(Ad ad) {                
+				isInterstitialLoad=false;
+				callbackContext.success("Facebook interstitial Ads displayed.");
             }
 
             @Override
             public void onInterstitialDismissed(Ad ad) {
-                // Interstitial dismissed callback
-                callbackContext.success("Interstitial ad dismissed");
-                //Log.e(TAG, "Interstitial ad dismissed.");
+                callbackContext.success("Facebook interstitial Ads dismissed");
             }
 
             @Override
             public void onError(Ad ad, AdError adError) {
-                // Ad error callback
-                callbackContext.error("Interstitial ad failed to load: " + adError.getErrorMessage());
-                //Log.e(TAG, "Interstitial ad failed to load: " + adError.getErrorMessage());
+				isInterstitialLoad=false;
+                callbackContext.error("Facebook interstitial Ads failed to load: " + adError.getErrorMessage());
             }
 
             @Override
             public void onAdLoaded(Ad ad) {
-                // Interstitial ad is loaded and ready to be displayed
-                callbackContext.success("Interstitial ad is loaded and ready to be displayed!");
-                //Log.d(TAG, "Interstitial ad is loaded and ready to be displayed!");
-                // Show the ad
-                interstitialAd.show();
+				isInterstitialLoad=true;
+                callbackContext.success("Facebook interstitial Ads is loaded and ready to be displayed!");
             }
 
             @Override
             public void onAdClicked(Ad ad) {
-                // Ad clicked callback
-                callbackContext.success("Interstitial ad clicked!");
-                //Log.d(TAG, "Interstitial ad clicked!");
+                callbackContext.success("Facebook interstitial Ads clicked!");
             }
 
             @Override
             public void onLoggingImpression(Ad ad) {
-                // Ad impression logged callback
-                callbackContext.success("Interstitial ad impression logged!");
-                //Log.d(TAG, "Interstitial ad impression logged!");
+                callbackContext.success("Facebook interstitial Ads impression logged!");
             }
         });
 
