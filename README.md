@@ -265,6 +265,12 @@ function fail(result)
 
 
 
+
+
+
+
+
+
 <h2>Support Platfrom</h2>
 <ul>
 <li>Android</li>

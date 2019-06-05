@@ -5,6 +5,7 @@ package cordova.plugin.codeplay.facebookads.free;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -20,6 +21,8 @@ import org.json.JSONObject;
 
 import com.facebook.ads.*;
 
+import static org.apache.cordova.Whitelist.TAG;
+
 
 /**
  * This class echoes a string called from JavaScript.
@@ -33,8 +36,9 @@ public class codeplayfacebookads extends CordovaPlugin {
 
     private ViewGroup parentView;
     static boolean isFirstTime=true;
-    static boolean isInterstitialLoad=false;	
-
+    static boolean isInterstitialLoad=false;
+    static boolean isRewardVideoLoad=false;
+    private RewardedVideoAd rewardedVideoAd;
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 
@@ -51,19 +55,40 @@ public class codeplayfacebookads extends CordovaPlugin {
 
         if (action.equals("showBannerAds")) {
 
-            String adBannerID = opts.optString("bannerid");
-            String isTesting = opts.optString("isTesting");
+
+
+            String isTesting;
+            String bannerid;
+
+            try {
+                bannerid = opts.optString("bannerid");
+            }
+            catch (NullPointerException e)
+            {
+                callbackContext.error("Please pass the bannerid");
+                return  false;
+            }
+
+            try {
+                isTesting = opts.optString("isTesting");
+            }
+            catch(NullPointerException e)
+            {
+                callbackContext.error("Please pass isTesting value");
+                return  false;
+            }
+
+
+
 
             //Banner size set here getBannerAdSize(BANNER SIZE)
-            adView = new AdView(testParameter, adBannerID, getBannerAdSize(""));
+            adView = new AdView(testParameter, bannerid, getBannerAdSize(""));
 
             if(Boolean.parseBoolean(isTesting)) {
                 SharedPreferences adPrefs = cordova.getActivity().getSharedPreferences("FBAdPrefs", 0);
                 String deviceIdHash = adPrefs.getString("deviceIdHash", (String) null);
                 AdSettings.addTestDevice(deviceIdHash);
             }
-
-
 
 
             facebookBannerAdsShow(callbackContext);
@@ -96,9 +121,32 @@ public class codeplayfacebookads extends CordovaPlugin {
 		
         if (action.equals("loadInterstitialAds")) {
 
-            String interstitialid = opts.optString("interstitialid");
-            String isTesting = opts.optString("isTesting");
+
+            String isTesting;
+            String interstitialid;
+
+            try {
+                interstitialid = opts.optString("interstitialid");
+            }
+            catch (NullPointerException e)
+            {
+                callbackContext.error("Please pass the interstitial ad id");
+                return  false;
+            }
+
+            try {
+                isTesting = opts.optString("isTesting");
+            }
+            catch(NullPointerException e)
+            {
+                callbackContext.error("Please pass isTesting value");
+                return  false;
+            }
+
+
             interstitialAd = new InterstitialAd(testParameter, interstitialid);
+
+
 
             if(Boolean.parseBoolean(isTesting)) {
                 SharedPreferences adPrefs = cordova.getActivity().getSharedPreferences("FBAdPrefs", 0);
@@ -113,19 +161,150 @@ public class codeplayfacebookads extends CordovaPlugin {
         }
 
         if (action.equals("showInterstitialAds")) {
-			
-			if(isInterstitialLoad)
-			{
-				interstitialAd.show();
-				callbackContext.success("Facebook interstitial Ads Loaded");
-			}
-			else
-				callbackContext.error("First initialize the facebook interstitial ads '	cordova.plugins.codeplayfacebookads.loadInterstitialAds(options,success,fail);'");
+
+            if(isInterstitialLoad)
+            {
+                interstitialAd.show();
+                callbackContext.success("Facebook interstitial Ads Showing");
+            }
+            else
+                callbackContext.error("First initialize the facebook interstitial ads '	cordova.plugins.codeplayfacebookads.loadInterstitialAds(options,success,fail);'");
 
             return true;
         }
+
+
+
+
+
+        if (action.equals("loadRewardVideoAd")) {
+
+
+
+
+
+
+            String isTesting;
+            String videoid;
+
+            try {
+                videoid = opts.optString("videoid");
+            }
+            catch (NullPointerException e)
+            {
+                callbackContext.error("Please pass the videoid");
+                return  false;
+            }
+
+            try {
+                isTesting = opts.optString("isTesting");
+            }
+            catch(NullPointerException e)
+            {
+                callbackContext.error("Please pass isTesting value");
+                return  false;
+            }
+
+
+
+
+
+
+
+
+
+            rewardedVideoAd = new RewardedVideoAd(testParameter, videoid);
+
+            if(Boolean.parseBoolean(isTesting)) {
+                SharedPreferences adPrefs = cordova.getActivity().getSharedPreferences("FBAdPrefs", 0);
+                String deviceIdHash = adPrefs.getString("deviceIdHash", (String) null);
+                AdSettings.addTestDevice(deviceIdHash);
+            }
+
+            facebookRewardVideoAds(callbackContext);
+
+            return true;
+        }
+
+
+
+        if (action.equals("showRewardVideoAd")) {
+
+            if(isRewardVideoLoad)
+            {
+                interstitialAd.show();
+                //callbackContext.success("Facebook interstitial Ads Loaded");
+            }
+            else
+                callbackContext.error("First initialize the facebook Video ads '	cordova.plugins.codeplayfacebookads.loadRewardVideoAd(videoid,success,fail);'");
+
+            return true;
+        }
+
         return false;
     }
+
+
+    private void facebookRewardVideoAds(CallbackContext callbackContext)
+    {
+
+        rewardedVideoAd.setAdListener(new RewardedVideoAdListener() {
+            @Override
+            public void onError(Ad ad, AdError error) {
+                // Rewarded video ad failed to load
+                //Log.e(TAG, "Rewarded video ad failed to load: " + error.getErrorMessage());
+
+                callbackContext.error("Rewarded video ad failed to load: " + error.getErrorMessage());
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Rewarded video ad is loaded and ready to be displayed
+                //Log.d(TAG, "Rewarded video ad is loaded and ready to be displayed!");
+                callbackContext.success("Rewarded video ad is loaded and ready to be displayed!");
+                rewardedVideoAd.show();
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Rewarded video ad clicked
+                //Log.d(TAG, "Rewarded video ad clicked!");
+                callbackContext.success("Rewarded video ad clicked!");
+
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Rewarded Video ad impression - the event will fire when the
+                // video starts playing
+                //Log.d(TAG, "Rewarded video ad impression logged!");
+                callbackContext.success("Rewarded video ad impression logged!");
+            }
+
+            @Override
+            public void onRewardedVideoCompleted() {
+                // Rewarded Video View Complete - the video has been played to the end.
+                // You can use this event to initialize your reward
+                //Log.d(TAG, "Rewarded video completed!");
+
+                callbackContext.success("Rewarded video completed!");
+                // Call method to give reward
+                // giveReward();
+            }
+
+            @Override
+            public void onRewardedVideoClosed() {
+                // The Rewarded Video ad was closed - this can occur during the video
+                // by closing the app, or closing the end card.
+                //Log.d(TAG, "Rewarded video ad closed!");
+                callbackContext.success("Rewarded video ad closed!");
+            }
+        });
+        rewardedVideoAd.loadAd();
+
+
+    }
+
 
 
     private void facebookBannerAdsShow(CallbackContext callbackContext)
@@ -155,9 +334,6 @@ public class codeplayfacebookads extends CordovaPlugin {
                 parentView.bringToFront();
                 parentView.requestLayout();
                 parentView.requestFocus();
-
-
-
 
             }
         });

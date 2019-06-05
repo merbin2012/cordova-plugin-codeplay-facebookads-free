@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-codeplay-facebookads-free",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Free facebook audience network ads for cordova user. This supports banner and Interstitial ads.",
   "cordova": {
     "id": "cordova-plugin-codeplay-facebookads-free",
