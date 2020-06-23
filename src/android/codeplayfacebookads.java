@@ -18,8 +18,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import org.apache.cordova.PluginResult;
 
 import com.facebook.ads.*;
+
+import java.io.IOError;
+import java.io.IOException;
 
 import static org.apache.cordova.Whitelist.TAG;
 
@@ -30,11 +34,11 @@ import static org.apache.cordova.Whitelist.TAG;
 public class codeplayfacebookads extends CordovaPlugin {
 
 
-    private AdView adView;
+    private AdView facebookadView;
     private InterstitialAd interstitialAd;
 
 
-    private ViewGroup parentView;
+    private ViewGroup facebookparentView;
     static boolean isFirstTime=true;
     static boolean isInterstitialLoad=false;
     static boolean isRewardVideoLoad=false;
@@ -78,11 +82,8 @@ public class codeplayfacebookads extends CordovaPlugin {
                 return  false;
             }
 
-
-
-
             //Banner size set here getBannerAdSize(BANNER SIZE)
-            adView = new AdView(testParameter, bannerid, getBannerAdSize(""));
+            facebookadView = new AdView(testParameter, bannerid, getBannerAdSize(""));
 
             if(Boolean.parseBoolean(isTesting)) {
                 SharedPreferences adPrefs = cordova.getActivity().getSharedPreferences("FBAdPrefs", 0);
@@ -90,9 +91,13 @@ public class codeplayfacebookads extends CordovaPlugin {
                 AdSettings.addTestDevice(deviceIdHash);
             }
 
-
-            facebookBannerAdsShow(callbackContext);
-
+            try {
+                facebookBannerAdsShow(callbackContext);
+            }
+            catch(IOError err)
+            {
+                callbackContext.error("App prevent from closing");
+            }
             //String message = args.getString(0);
             //this.coolMethod(message, callbackContext);
             return true;
@@ -104,9 +109,9 @@ public class codeplayfacebookads extends CordovaPlugin {
             cordova.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (adView != null) {
-                        ((ViewGroup)adView.getParent()).removeView(adView);
-                        adView=null;
+                    if (facebookadView != null) {
+                        ((ViewGroup)facebookadView.getParent()).removeView(facebookadView);
+                        facebookadView=null;
                     }
                     callbackContext.success("Facebook banner Ads hide");
 
@@ -232,7 +237,9 @@ public class codeplayfacebookads extends CordovaPlugin {
 
             if(isRewardVideoLoad)
             {
-                interstitialAd.show();
+                //interstitialAd.show();
+				rewardedVideoAd.show();
+				isRewardVideoLoad = false;
                 //callbackContext.success("Facebook interstitial Ads Loaded");
             }
             else
@@ -253,7 +260,7 @@ public class codeplayfacebookads extends CordovaPlugin {
             public void onError(Ad ad, AdError error) {
                 // Rewarded video ad failed to load
                 //Log.e(TAG, "Rewarded video ad failed to load: " + error.getErrorMessage());
-
+				isRewardVideoLoad = false;
                 callbackContext.error("Rewarded video ad failed to load: " + error.getErrorMessage());
             }
 
@@ -261,15 +268,22 @@ public class codeplayfacebookads extends CordovaPlugin {
             public void onAdLoaded(Ad ad) {
                 // Rewarded video ad is loaded and ready to be displayed
                 //Log.d(TAG, "Rewarded video ad is loaded and ready to be displayed!");
-                callbackContext.success("Rewarded video ad is loaded and ready to be displayed!");
-                rewardedVideoAd.show();
+                //callbackContext.success("Rewarded video ad is loaded and ready to be displayed!");
+				PluginResult result = new PluginResult(PluginResult.Status.OK, "AdLoaded");				
+				result.setKeepCallback(true);
+				callbackContext.sendPluginResult(result);
+               // rewardedVideoAd.show();
+			   isRewardVideoLoad = true;
             }
 
             @Override
             public void onAdClicked(Ad ad) {
                 // Rewarded video ad clicked
                 //Log.d(TAG, "Rewarded video ad clicked!");
-                callbackContext.success("Rewarded video ad clicked!");
+                //callbackContext.error("Rewarded video ad clicked!");
+				PluginResult result = new PluginResult(PluginResult.Status.OK, "AdClicked");				
+				result.setKeepCallback(true);
+				callbackContext.sendPluginResult(result);
 
             }
 
@@ -278,7 +292,10 @@ public class codeplayfacebookads extends CordovaPlugin {
                 // Rewarded Video ad impression - the event will fire when the
                 // video starts playing
                 //Log.d(TAG, "Rewarded video ad impression logged!");
-                callbackContext.success("Rewarded video ad impression logged!");
+                //callbackContext.success("Rewarded video ad impression logged!");
+				PluginResult result = new PluginResult(PluginResult.Status.OK, "AdPlaying");				
+				result.setKeepCallback(true);
+				callbackContext.sendPluginResult(result);
             }
 
             @Override
@@ -287,7 +304,10 @@ public class codeplayfacebookads extends CordovaPlugin {
                 // You can use this event to initialize your reward
                 //Log.d(TAG, "Rewarded video completed!");
 
-                callbackContext.success("Rewarded video completed!");
+                //callbackContext.success("Rewarded video completed!");
+				PluginResult result = new PluginResult(PluginResult.Status.OK, "AdCompleted");				
+				//result.setKeepCallback(true);
+				callbackContext.sendPluginResult(result);
                 // Call method to give reward
                 // giveReward();
             }
@@ -297,7 +317,10 @@ public class codeplayfacebookads extends CordovaPlugin {
                 // The Rewarded Video ad was closed - this can occur during the video
                 // by closing the app, or closing the end card.
                 //Log.d(TAG, "Rewarded video ad closed!");
-                callbackContext.success("Rewarded video ad closed!");
+                //callbackContext.success("Rewarded video ad closed!");
+				PluginResult result = new PluginResult(PluginResult.Status.OK, "AdClosed");				
+				//result.setKeepCallback(true);
+				callbackContext.sendPluginResult(result);
             }
         });
         rewardedVideoAd.loadAd();
@@ -309,38 +332,11 @@ public class codeplayfacebookads extends CordovaPlugin {
 
     private void facebookBannerAdsShow(CallbackContext callbackContext)
     {
-        cordova.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                View view = webView.getView();
-                ViewGroup wvParentView = (ViewGroup) view.getParent();
-                if (parentView == null) {
-                    parentView = new LinearLayout(webView.getContext());
-                }
-
-
-                if (wvParentView != null && wvParentView != parentView) {
-                    ViewGroup rootView = (ViewGroup)(view.getParent());
-                    wvParentView.removeView(view);
-                    ((LinearLayout) parentView).setOrientation(LinearLayout.VERTICAL);
-                    parentView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 0.0F));
-                    view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0F));
-                    parentView.addView(view);
-                    rootView.addView(parentView);
-                }
-
-                parentView.addView(adView);
-                parentView.bringToFront();
-                parentView.requestLayout();
-                parentView.requestFocus();
-
-            }
-        });
 
 
 
-        adView.setAdListener(new AdListener() {
+
+        facebookadView.setAdListener(new AdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {
                 callbackContext.error(adError.getErrorMessage());
@@ -349,6 +345,45 @@ public class codeplayfacebookads extends CordovaPlugin {
             @Override
             public void onAdLoaded(Ad ad) {
                 callbackContext.success("Facebook banner Ads loaded");
+
+
+
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        View viewfacebook = webView.getView();
+                        ViewGroup facebookwvParentView = (ViewGroup) viewfacebook.getParent();
+                        if (facebookparentView == null) {
+                            facebookparentView = new LinearLayout(webView.getContext());
+                        }
+
+
+                        if (facebookwvParentView != null && facebookwvParentView != facebookparentView) {
+                            ViewGroup facebookrootView = (ViewGroup)(viewfacebook.getParent());
+                            facebookwvParentView.removeView(viewfacebook);
+                            ((LinearLayout) facebookparentView).setOrientation(LinearLayout.VERTICAL);
+                            facebookparentView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 0.0F));
+                            viewfacebook.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0F));
+                            facebookparentView.addView(viewfacebook);
+                            facebookrootView.addView(facebookparentView);
+                        }
+
+                        facebookparentView.addView(facebookadView);
+                        facebookparentView.bringToFront();
+                        facebookparentView.requestLayout();
+                        facebookparentView.requestFocus();
+
+                    }
+                });
+
+
+
+
+
+
+
             }
 
             @Override
@@ -363,7 +398,7 @@ public class codeplayfacebookads extends CordovaPlugin {
         });
 
         // Request an ad
-        adView.loadAd();
+        facebookadView.loadAd();
     }
 
 
@@ -438,8 +473,8 @@ public class codeplayfacebookads extends CordovaPlugin {
 
     @Override
     public void onDestroy() {
-        if (adView != null) {
-            adView.destroy();
+        if (facebookadView != null) {
+            facebookadView.destroy();
         }
         if (interstitialAd != null) {
             interstitialAd.destroy();
