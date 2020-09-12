@@ -306,7 +306,7 @@ public class codeplayfacebookads extends CordovaPlugin {
 
                 //callbackContext.success("Rewarded video completed!");
 				PluginResult result = new PluginResult(PluginResult.Status.OK, "AdCompleted");				
-				//result.setKeepCallback(true);
+				result.setKeepCallback(true);
 				callbackContext.sendPluginResult(result);
                 // Call method to give reward
                 // giveReward();
@@ -408,12 +408,18 @@ public class codeplayfacebookads extends CordovaPlugin {
             @Override
             public void onInterstitialDisplayed(Ad ad) {                
 				isInterstitialLoad=false;
-				callbackContext.success("Facebook interstitial Ads displayed.");
+                // callbackContext.success("Facebook interstitial Ads displayed.");
+                PluginResult result = new PluginResult(PluginResult.Status.OK, "AdDisplayed");				
+				result.setKeepCallback(true);
+				callbackContext.sendPluginResult(result);
             }
 
             @Override
             public void onInterstitialDismissed(Ad ad) {
-                callbackContext.success("Facebook interstitial Ads dismissed");
+                // callbackContext.success("Facebook interstitial Ads dismissed");
+                PluginResult result = new PluginResult(PluginResult.Status.OK, "AdClosed");				
+				//result.setKeepCallback(true);
+				callbackContext.sendPluginResult(result);
             }
 
             @Override
@@ -425,17 +431,25 @@ public class codeplayfacebookads extends CordovaPlugin {
             @Override
             public void onAdLoaded(Ad ad) {
 				isInterstitialLoad=true;
-                callbackContext.success("Facebook interstitial Ads is loaded and ready to be displayed!");
+                PluginResult result = new PluginResult(PluginResult.Status.OK, "AdLoaded");				
+				result.setKeepCallback(true);
+				callbackContext.sendPluginResult(result);
             }
 
             @Override
             public void onAdClicked(Ad ad) {
-                callbackContext.success("Facebook interstitial Ads clicked!");
+                // callbackContext.success("Facebook interstitial Ads clicked!");
+                PluginResult result = new PluginResult(PluginResult.Status.OK, "AdClicked");				
+				result.setKeepCallback(true);
+				callbackContext.sendPluginResult(result);
             }
 
             @Override
             public void onLoggingImpression(Ad ad) {
-                callbackContext.success("Facebook interstitial Ads impression logged!");
+                // callbackContext.success("Facebook interstitial Ads impression logged!");
+                PluginResult result = new PluginResult(PluginResult.Status.OK, "AdLogged");				
+				result.setKeepCallback(true);
+				callbackContext.sendPluginResult(result);
             }
         });
 
