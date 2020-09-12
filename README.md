@@ -113,7 +113,7 @@ function fail(result)
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.loadInterstitialAds(options,success,fail);
+cordova.plugins.codeplayfacebookads.loadInterstitialAds(options,events,fail);
 ```
 
 <h4>Options</h4>
@@ -134,11 +134,25 @@ interstitialid:"52351930143xxx_xxxxxxxxxxxxxxx"
 ,isTesting:true
 };
 
-cordova.plugins.codeplayfacebookads.loadInterstitialAds(options,success,fail);
+cordova.plugins.codeplayfacebookads.loadInterstitialAds(options,events,fail);
 
-function success(result)
+function events(event)
 {
- console.log(result);
+  if(event === "AdLoaded"){
+	 console.log("AdLoaded");
+  }
+  else if(event === "AdClosed"){
+	 console.log("AdClosed");
+  }
+  else if(event === "AdDisplayed"){
+	 console.log("AdDisplayed");
+  }
+  else if(event === "AdClicked"){
+	 console.log("AdClicked");
+  }
+  else if(event === "AdLogged"){
+	 console.log("AdLogged");
+  }
 }
 function fail(result)
 {
@@ -192,7 +206,7 @@ function fail(result)
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.loadRewardVideoAd(options,success,fail);
+cordova.plugins.codeplayfacebookads.loadRewardVideoAd(options,events,fail);
 ```
 
 <h4>Options</h4>
@@ -213,12 +227,27 @@ videoid:"52351930143xxx_xxxxxxxxxxxxxxx"
 ,isTesting:true
 };
 
-cordova.plugins.codeplayfacebookads.loadRewardVideoAd(options,success,fail);
+cordova.plugins.codeplayfacebookads.loadRewardVideoAd(options,events,fail);
 
-function success(result)
+function events(event)
 {
- console.log(result);
+  if(event === "AdLoaded"){
+	 console.log("AdLoaded");
+  }
+  else if(event === "AdClosed"){
+	 console.log("AdClosed");
+  }
+  else if(event === "AdPlaying"){
+	 console.log("AdPlaying");
+  }
+  else if(event === "AdClicked"){
+	 console.log("AdClicked");
+  }
+  else if(event === "AdCompleted"){
+	 console.log("AdCompleted");
+  }
 }
+
 function fail(result)
 {
  console.log(result);
