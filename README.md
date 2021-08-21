@@ -7,7 +7,7 @@ https://github.com/merbin2012/cordova-plugin-codeplay-facebookads-free
 
 
 <h2>Facebook Audience Network SDK version</h2>
-I will try to keep the latest version, current version is 'com.facebook.android:audience-network-sdk:6.2.0'
+I will try to keep the latest version, current version is 'com.facebook.android:audience-network-sdk:6.+'
 
 
 <h2>How to Instalation?</h2>
@@ -38,7 +38,7 @@ I will try to keep the latest version, current version is 'com.facebook.android:
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.showBannerAds(options,success,fail)
+cordova.plugins.codeplayfacebookads.showBannerAds(options,bannerSuccess,bannerFail);
 ```
 
 <h4>Options</h4>
@@ -58,13 +58,26 @@ bannerid:"523519301434xxx_xxxxxxxxxxxxxxx"
 ,isTesting:true
 };
 
-cordova.plugins.codeplayfacebookads.showBannerAds(options,success,fail);
+cordova.plugins.codeplayfacebookads.showBannerAds(options,bannerSuccess,bannerFail);
 
-function success(result)
+function bannerSuccess(evt)
 {
- console.log(result);
+
+  if(evt === "AdLoaded"){
+     console.log("Facebook AdLoaded");
+  }
+  else if(evt === "AdClicked"){
+     console.log("Facebook AdClicked");
+  }
+  else if(evt === "AdImpression"){
+     console.log("Facebook AdImpression");
+  }
+  else if(evt === "AdHidden"){
+     console.log("Facebook AdHidden");
+  }  
+  
 }
-function fail(result)
+function bannerFail(result)
 {
  console.log(result);
 }
@@ -86,13 +99,26 @@ function fail(result)
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.hideBannerAds("",success,fail);
+cordova.plugins.codeplayfacebookads.hideBannerAds("",bannerSuccess,bannerFail);
 
-function success(result)
+function bannerSuccess(evt)
 {
- console.log(result);
+
+  if(evt === "AdLoaded"){
+     console.log("Facebook AdLoaded");
+  }
+  else if(evt === "AdClicked"){
+     console.log("Facebook AdClicked");
+  }
+  else if(evt === "AdImpression"){
+     console.log("Facebook AdImpression");
+  }
+  else if(evt === "AdHidden"){
+     console.log("Facebook AdHidden");
+  }  
+  
 }
-function fail(result)
+function bannerFail(result)
 {
  console.log(result);
 }
