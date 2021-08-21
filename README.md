@@ -7,7 +7,7 @@ https://github.com/merbin2012/cordova-plugin-codeplay-facebookads-free
 
 
 <h2>Facebook Audience Network SDK version</h2>
-I will try to keep the latest version, current version is com.facebook.android:audience-network-sdk:5.+
+I will try to keep the latest version, current version is 'com.facebook.android:audience-network-sdk:6.2.0'
 
 
 <h2>How to Instalation?</h2>
@@ -113,7 +113,7 @@ function fail(result)
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.loadInterstitialAds(options,events,fail);
+cordova.plugins.codeplayfacebookads.loadInterstitialAds(options,interstitialSuccess,interstitialFail);
 ```
 
 <h4>Options</h4>
@@ -134,27 +134,28 @@ interstitialid:"52351930143xxx_xxxxxxxxxxxxxxx"
 ,isTesting:true
 };
 
-cordova.plugins.codeplayfacebookads.loadInterstitialAds(options,events,fail);
+cordova.plugins.codeplayfacebookads.loadInterstitialAds(options,interstitialSuccess,interstitialFail);
 
-function events(event)
+function interstitialSuccess(evt)
 {
-  if(event === "AdLoaded"){
-	 console.log("AdLoaded");
+
+  if(evt === "AdDisplayed"){
+     console.log("Facebook AdDisplayed");
   }
-  else if(event === "AdClosed"){
-	 console.log("AdClosed");
+  else if(evt === "AdClosed"){
+     console.log("Facebook AdClosed");
   }
-  else if(event === "AdDisplayed"){
-	 console.log("AdDisplayed");
+  else if(evt === "AdLoaded"){
+     console.log("Facebook AdLoaded");
   }
-  else if(event === "AdClicked"){
-	 console.log("AdClicked");
+  else if(evt === "AdClicked"){
+     console.log("Facebook AdClicked");
   }
-  else if(event === "AdLogged"){
-	 console.log("AdLogged");
+  else if(evt === "AdImpression"){
+     console.log("Facebook AdImpression");
   }
 }
-function fail(result)
+function interstitialFail(result)
 {
  console.log(result);
 }
@@ -167,7 +168,7 @@ function fail(result)
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.showInterstitialAds("",success,fail);
+cordova.plugins.codeplayfacebookads.showInterstitialAds("",interstitialSuccess,interstitialFail);
 ```
 
 
@@ -175,13 +176,28 @@ cordova.plugins.codeplayfacebookads.showInterstitialAds("",success,fail);
 <h4>Example</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.showInterstitialAds("",success,fail);
+cordova.plugins.codeplayfacebookads.showInterstitialAds("",interstitialSuccess,interstitialFail);
 
-function success(result)
+function interstitialSuccess(evt)
 {
- console.log(result);
+
+  if(evt === "AdDisplayed"){
+     console.log("Facebook AdDisplayed");
+  }
+  else if(evt === "AdClosed"){
+     console.log("Facebook AdClosed");
+  }
+  else if(evt === "AdLoaded"){
+     console.log("Facebook AdLoaded");
+  }
+  else if(evt === "AdClicked"){
+     console.log("Facebook AdClicked");
+  }
+  else if(evt === "AdImpression"){
+     console.log("Facebook AdImpression");
+  }
 }
-function fail(result)
+function interstitialFail(result)
 {
  console.log(result);
 }
@@ -206,7 +222,7 @@ function fail(result)
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.loadRewardVideoAd(options,events,fail);
+cordova.plugins.codeplayfacebookads.loadRewardVideoAd(options,videoRewardSuccess,videoRewardFail);
 ```
 
 <h4>Options</h4>
@@ -227,28 +243,28 @@ videoid:"52351930143xxx_xxxxxxxxxxxxxxx"
 ,isTesting:true
 };
 
-cordova.plugins.codeplayfacebookads.loadRewardVideoAd(options,events,fail);
+cordova.plugins.codeplayfacebookads.loadRewardVideoAd(options,videoRewardSuccess,videoRewardFail);
 
-function events(event)
+function videoRewardSuccess(evt)
 {
-  if(event === "AdLoaded"){
-	 console.log("AdLoaded");
+
+  if(evt === "AdLoaded"){
+     console.log("Facebook AdLoaded");
   }
-  else if(event === "AdClosed"){
-	 console.log("AdClosed");
+  else if(evt === "AdClicked"){
+     console.log("Facebook AdClicked");
   }
-  else if(event === "AdPlaying"){
-	 console.log("AdPlaying");
+  else if(evt === "AdPlaying"){
+     console.log("Facebook AdPlaying");
   }
-  else if(event === "AdClicked"){
-	 console.log("AdClicked");
+  else if(evt === "AdCompleted"){
+     console.log("Facebook AdCompleted");
   }
-  else if(event === "AdCompleted"){
-	 console.log("AdCompleted");
+  else if(evt === "AdClosed"){
+     console.log("Facebook AdClosed");
   }
 }
-
-function fail(result)
+function videoRewardFail(result)
 {
  console.log(result);
 }
@@ -270,20 +286,35 @@ Reference : https://stackoverflow.com/questions/50532615/facebook-rewarded-video
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.showRewardVideoAd("",success,fail);
+cordova.plugins.codeplayfacebookads.showRewardVideoAd("",videoRewardSuccess,videoRewardFail);
 ```
 
 
 <h4>Example</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.showRewardVideoAd("",options,success,fail);
+cordova.plugins.codeplayfacebookads.showRewardVideoAd("",videoRewardSuccess,videoRewardFail);
 
-function success(result)
+function videoRewardSuccess(evt)
 {
- console.log(result);
+
+  if(evt === "AdLoaded"){
+     console.log("Facebook AdLoaded");
+  }
+  else if(evt === "AdClicked"){
+     console.log("Facebook AdClicked");
+  }
+  else if(evt === "AdPlaying"){
+     console.log("Facebook AdPlaying");
+  }
+  else if(evt === "AdCompleted"){
+     console.log("Facebook AdCompleted");
+  }
+  else if(evt === "AdClosed"){
+     console.log("Facebook AdClosed");
+  }
 }
-function fail(result)
+function videoRewardFail(result)
 {
  console.log(result);
 }
