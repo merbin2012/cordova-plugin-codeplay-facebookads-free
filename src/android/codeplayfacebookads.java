@@ -116,6 +116,12 @@ public class codeplayfacebookads extends CordovaPlugin {
 
         if (action.equals("hideBannerAds")) {
 
+            if(!_isBannerShowing)
+            {
+                callbackContext.error("Banner is not showing");
+                return false;
+            }
+
             cordova.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
