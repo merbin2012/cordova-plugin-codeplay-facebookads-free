@@ -34,11 +34,12 @@ I will try to keep the latest version, current version is 'com.facebook.android:
 </blockquote>
 
 <h2>Methods 1</h2>
-<h3>Show Banner Ads</h3>
+<h3>Load and immediately show Banner Ads.</h3>
+<p>Note: Strongly recommended  you to use <b>loadAndShowBannerAds</b> for banner ads instead of loading, showing, hiding separately.</p>
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.showBannerAds(options,bannerSuccess,bannerFail);
+cordova.plugins.codeplayfacebookads.loadAndShowBannerAds(options,bannerSuccess,bannerFail);
 ```
 
 <h4>Options</h4>
@@ -53,12 +54,8 @@ bannerid:"523519301434xxx_xxxxxxxxxxxxxxx"
 <h4>Example</h4>
 
 ```javascript
-var options={
-bannerid:"523519301434xxx_xxxxxxxxxxxxxxx"
-,isTesting:true
-};
 
-cordova.plugins.codeplayfacebookads.showBannerAds(options,bannerSuccess,bannerFail);
+cordova.plugins.codeplayfacebookads.loadAndShowBannerAds(options,bannerSuccess,bannerFail);
 
 function bannerSuccess(evt)
 {
@@ -72,6 +69,9 @@ function bannerSuccess(evt)
   else if(evt === "AdImpression"){
      console.log("Facebook AdImpression");
   }
+  else if(evt === "AdDistroyed"){
+	console.log("Facebook banner AdDistroyed");
+  }  
   else if(evt === "AdHidden"){
      console.log("Facebook AdHidden");
   }  
@@ -94,12 +94,30 @@ function bannerFail(result)
 
 
 
+
+
 <h2>Methods 2</h2>
-<h3>Hide Banner Ads</h3>
+<h3>Load only Banner Ads</h3>
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.hideBannerAds("",bannerSuccess,bannerFail);
+cordova.plugins.codeplayfacebookads.loadBannerAds(options,bannerSuccess,bannerFail);
+```
+
+<h4>Options</h4>
+
+```javascript
+var options={
+bannerid:"523519301434xxx_xxxxxxxxxxxxxxx"
+,isTesting:true|false
+}
+```
+
+<h4>Example</h4>
+
+```javascript
+
+cordova.plugins.codeplayfacebookads.loadBannerAds(options,bannerSuccess,bannerFail);
 
 function bannerSuccess(evt)
 {
@@ -113,8 +131,110 @@ function bannerSuccess(evt)
   else if(evt === "AdImpression"){
      console.log("Facebook AdImpression");
   }
+  else if(evt === "AdDistroyed"){
+	console.log("Facebook banner AdDistroyed");
+  }   
   else if(evt === "AdHidden"){
      console.log("Facebook AdHidden");
+  }  
+  
+}
+function bannerFail(result)
+{
+ console.log(result);
+}
+```
+
+
+
+
+
+
+
+
+
+
+<h2>Methods 3</h2>
+<h3>Show banner ad after load the banner Ad</h3>
+<h4>Syntax</h4>
+
+```javascript
+cordova.plugins.codeplayfacebookads.showBannerAds(bannerSuccess,bannerFail);
+```
+
+
+<h4>Example</h4>
+
+```javascript
+
+cordova.plugins.codeplayfacebookads.showBannerAds(bannerSuccess,bannerFail);
+
+function bannerSuccess(evt)
+{
+
+  if(evt === "AdLoaded"){
+     console.log("Facebook AdLoaded");
+  }
+  else if(evt === "AdClicked"){
+     console.log("Facebook AdClicked");
+  }
+  else if(evt === "AdImpression"){
+     console.log("Facebook AdImpression");
+  }
+  else if(evt === "AdDistroyed"){
+	console.log("Facebook banner AdDistroyed");
+  }  
+  else if(evt === "AdHidden"){
+     console.log("Facebook AdHidden");
+  }  
+  
+}
+function bannerFail(result)
+{
+ console.log(result);
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>Methods 4</h2>
+<h3>Hide/distroy Banner Ads</h3>
+<h4>Syntax</h4>
+
+```javascript
+cordova.plugins.codeplayfacebookads.distroyBannerAds(bannerSuccess,bannerFail);
+
+function bannerSuccess(evt)
+{
+
+  if(evt === "AdLoaded"){
+     console.log("Facebook AdLoaded");
+  }
+  else if(evt === "AdClicked"){
+     console.log("Facebook AdClicked");
+  }
+  else if(evt === "AdImpression"){
+     console.log("Facebook AdImpression");
+  }
+  else if(evt === "AdDistroyed"){
+     console.log("Facebook AdDistroyed");
   }  
   
 }
@@ -134,7 +254,7 @@ function bannerFail(result)
 
 
 
-<h2>Methods 3</h2>
+<h2>Methods 5</h2>
 <h3>Load interstitial ads</h3>
 <h4>Syntax</h4>
 
@@ -189,12 +309,12 @@ function interstitialFail(result)
 
 
 
-<h2>Methods 4</h2>
+<h2>Methods 6</h2>
 <h3>Show interstitial ads</h3>
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.showInterstitialAds("",interstitialSuccess,interstitialFail);
+cordova.plugins.codeplayfacebookads.showInterstitialAds(interstitialSuccess,interstitialFail);
 ```
 
 
@@ -202,7 +322,7 @@ cordova.plugins.codeplayfacebookads.showInterstitialAds("",interstitialSuccess,i
 <h4>Example</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.showInterstitialAds("",interstitialSuccess,interstitialFail);
+cordova.plugins.codeplayfacebookads.showInterstitialAds(interstitialSuccess,interstitialFail);
 
 function interstitialSuccess(evt)
 {
@@ -243,7 +363,7 @@ function interstitialFail(result)
 
 
 
-<h2>Methods 5</h2>
+<h2>Methods 7</h2>
 <h3>Load Video ads</h3>
 <h4>Syntax</h4>
 
@@ -307,19 +427,19 @@ Reference : https://stackoverflow.com/questions/50532615/facebook-rewarded-video
 
 
 
-<h2>Methods 6</h2>
+<h2>Methods 8</h2>
 <h3>Show Video ads</h3>
 <h4>Syntax</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.showRewardVideoAd("",videoRewardSuccess,videoRewardFail);
+cordova.plugins.codeplayfacebookads.showRewardVideoAd(videoRewardSuccess,videoRewardFail);
 ```
 
 
 <h4>Example</h4>
 
 ```javascript
-cordova.plugins.codeplayfacebookads.showRewardVideoAd("",videoRewardSuccess,videoRewardFail);
+cordova.plugins.codeplayfacebookads.showRewardVideoAd(videoRewardSuccess,videoRewardFail);
 
 function videoRewardSuccess(evt)
 {
