@@ -12,6 +12,10 @@
     </config-file>
     <config-file parent="/*" target="AndroidManifest.xml"></config-file>
     <source-file src="src/android/codeplayfacebookads.java" target-dir="src/cordova/plugin/codeplay/facebookads/free/codeplayfacebookads" />
+	
+
   <framework custom="true" src="src/android/facebook-sdk.gradle" type="gradleReference" />
+
+	
   </platform>
 </plugin>
